@@ -592,7 +592,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b3b2c15bc1ed854b9975687cdaf85e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mouseSensitivity: 500
+  mouseSensitivity: 368
   distanceFromPlayer: 5
   verticalOffset: 1.5
   smoothSpeed: 0.2
@@ -2958,6 +2958,6 @@ SceneRoots:
   - {fileID: 410087041}
   - {fileID: 832575519}
   - {fileID: 1443301286}
-  - {fileID: 1651773206}
   - {fileID: 736402031}
+  - {fileID: 1651773206}
   - {fileID: 1886488070}
