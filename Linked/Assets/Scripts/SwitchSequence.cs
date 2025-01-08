@@ -11,6 +11,7 @@ public class SwitchSequence : MonoBehaviour
     public Transform smallGuyObject;
     public PlayerMovement playerMovement;
     public OverseerController overseerController;
+    public HoverManager hoverManager;
     public MouseLook mouseLook;
     public Image fadeImage;
     public float lookDuration = 0.5f;
@@ -95,13 +96,20 @@ public class SwitchSequence : MonoBehaviour
         mainCamera.transform.rotation = originalRotation;
         
         overseerController.enabled = true;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        hoverManager.enabled = true;
     }
 
     public void StartSwitchSequenceToSmall()
     {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
         isBig = false;
         playerMovement.enabled = false;
         mouseLook.enabled = false;
+        hoverManager.lastHoveredObject.RemoveHoverMaterial();
+        hoverManager.enabled = false;
         
         bigGuyCamera.transform.DOLookAt(smallGuyObject.position, lookDuration).SetEase(Ease.InOutQuad).OnComplete(() =>
         {
