@@ -74,7 +74,7 @@ public class SwitchSequence : MonoBehaviour
                 
                 mainCamera.transform.DOMove(zoomPosition, zoomDuration).SetEase(Ease.InQuad);
                 
-                mainCamera.DOFieldOfView(originalFOV + fovIncreaseAmount, zoomDuration).SetEase(Ease.InQuad);
+                mainCamera.DOFieldOfView(originalFOV - fovIncreaseAmount, zoomDuration).SetEase(Ease.InQuad);
                 
                 fadeImage.DOFade(1f, zoomDuration).SetEase(Ease.InExpo).OnComplete(SwitchCameraToBig);
             });
