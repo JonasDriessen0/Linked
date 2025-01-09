@@ -16,7 +16,7 @@ public class HoverManager : MonoBehaviour
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, hoverLayerMask))
         {
             GameObject hitObject = hit.collider.gameObject;
-
+            Debug.Log("Hovering over: " + hitObject.name);
             if (hitObject.CompareTag("MovableObject"))
             {
                 HoverHighlight hoverHighlight = hitObject.GetComponent<HoverHighlight>();
@@ -30,7 +30,6 @@ public class HoverManager : MonoBehaviour
                 {
                     hoverHighlight.ApplyHoverMaterial();
                     lastHoveredObject = hoverHighlight;
-                    Debug.Log("Hovering over: " + hitObject.name);
                 }
             }
             else
