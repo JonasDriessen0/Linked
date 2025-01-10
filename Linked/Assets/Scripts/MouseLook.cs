@@ -7,12 +7,13 @@ public class MouseLook : MonoBehaviour
     public float distanceFromPlayer = 5f;
     public float verticalOffset = 1.5f;
     public float smoothSpeed = 0.125f;
+    public float collisionRadius = 0.5f;
+    public LayerMask collisionLayers;
 
     [Header("References")]
     public Transform playerBody;
 
     private float xRotation = 0f;
-
     private Vector3 currentVelocity = Vector3.zero;
 
     void Start()
@@ -27,15 +28,20 @@ public class MouseLook : MonoBehaviour
 
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
-        
+
         transform.RotateAround(playerBody.position, Vector3.up, mouseX);
-        
+
         Quaternion verticalRotation = Quaternion.Euler(xRotation, transform.eulerAngles.y, 0f);
+
+        Vector3 direction = verticalRotation * Vector3.back;
+        Vector3 desiredPosition = playerBody.position + Vector3.up * verticalOffset + direction * distanceFromPlayer;
         
-        Vector3 desiredPosition = playerBody.position - verticalRotation * Vector3.forward * distanceFromPlayer + Vector3.up * verticalOffset;
-        
+        if (Physics.SphereCast(playerBody.position + Vector3.up * verticalOffset, collisionRadius, direction, out RaycastHit hit, distanceFromPlayer, collisionLayers))
+        {
+            desiredPosition = hit.point + direction * collisionRadius;
+        }
+
         transform.position = Vector3.SmoothDamp(transform.position, desiredPosition, ref currentVelocity, smoothSpeed);
-        
         transform.rotation = verticalRotation;
     }
 }

@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
-using UnityEngine.Serialization;
 
 public class SwitchSequence : MonoBehaviour
 {
@@ -18,6 +17,8 @@ public class SwitchSequence : MonoBehaviour
     public float zoomDuration = 2f;
     public float zoomDistance = 3f;
     public float fovIncreaseAmount = 10f;
+    public float fogTransitionDuration = 1f;
+    public float bigGuyFogDensity = 0.01f;
     public bool isBig;
 
     private Vector3 originalPosition;
@@ -25,6 +26,7 @@ public class SwitchSequence : MonoBehaviour
     private Vector3 bigGuyoriginalPosition;
     private Quaternion bigGuyoriginalRotation;
     private float originalFOV;
+    private float originalFogDensity;
 
     void Start()
     {
@@ -34,6 +36,7 @@ public class SwitchSequence : MonoBehaviour
         bigGuyoriginalPosition = bigGuyCamera.transform.position;
         bigGuyoriginalRotation = bigGuyCamera.transform.rotation;
         originalFOV = mainCamera.fieldOfView;
+        originalFogDensity = RenderSettings.fogDensity;
         fadeImage.color = new Color(1, 1, 1, 0);
     }
 
@@ -42,22 +45,10 @@ public class SwitchSequence : MonoBehaviour
         if (isBig)
         {
             StartSwitchSequenceToSmall();
-            
-            originalPosition = mainCamera.transform.position;
-            originalRotation = mainCamera.transform.rotation;
-        
-            bigGuyoriginalPosition = bigGuyCamera.transform.position;
-            bigGuyoriginalRotation = bigGuyCamera.transform.rotation;
         }
         else
         {
             StartSwitchSequenceToBig();
-            
-            originalPosition = mainCamera.transform.position;
-            originalRotation = mainCamera.transform.rotation;
-        
-            bigGuyoriginalPosition = bigGuyCamera.transform.position;
-            bigGuyoriginalRotation = bigGuyCamera.transform.rotation;
         }
     }
 
@@ -78,6 +69,8 @@ public class SwitchSequence : MonoBehaviour
                 mainCamera.DOFieldOfView(originalFOV - fovIncreaseAmount, zoomDuration).SetEase(Ease.InQuad);
                 
                 fadeImage.DOFade(1f, zoomDuration).SetEase(Ease.InExpo).OnComplete(SwitchCameraToBig);
+                
+                DOTween.To(() => RenderSettings.fogDensity, x => RenderSettings.fogDensity = x, bigGuyFogDensity, fogTransitionDuration);
             });
         });
     }
@@ -85,9 +78,7 @@ public class SwitchSequence : MonoBehaviour
     private void SwitchCameraToBig()
     {
         mainCamera.fieldOfView = originalFOV;
-        
         mainCamera.enabled = false;
-        
         bigGuyCamera.enabled = true;
         
         fadeImage.DOFade(0f, 1f).SetEase(Ease.InOutQuad);
@@ -108,7 +99,8 @@ public class SwitchSequence : MonoBehaviour
         isBig = false;
         playerMovement.enabled = false;
         mouseLook.enabled = false;
-        hoverManager.lastHoveredObject.RemoveHoverMaterial();
+        if(hoverManager.lastHoveredObject != null)
+            hoverManager.lastHoveredObject.RemoveHoverMaterial();
         hoverManager.enabled = false;
         
         bigGuyCamera.transform.DOLookAt(smallGuyObject.position, lookDuration).SetEase(Ease.InOutQuad).OnComplete(() =>
@@ -122,6 +114,8 @@ public class SwitchSequence : MonoBehaviour
                 bigGuyCamera.DOFieldOfView(originalFOV, zoomDuration).SetEase(Ease.InQuad);
                 
                 fadeImage.DOFade(1f, zoomDuration).SetEase(Ease.InExpo).OnComplete(SwitchCameraToSmall);
+                
+                DOTween.To(() => RenderSettings.fogDensity, x => RenderSettings.fogDensity = x, originalFogDensity, fogTransitionDuration);
             });
         });
     }
@@ -129,9 +123,7 @@ public class SwitchSequence : MonoBehaviour
     private void SwitchCameraToSmall()
     {
         bigGuyCamera.fieldOfView = originalFOV;
-        
         bigGuyCamera.enabled = false;
-        
         mainCamera.enabled = true;
         
         fadeImage.DOFade(0f, 1f).SetEase(Ease.InOutQuad);

@@ -10,7 +10,6 @@ public class CollideWithButton : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        Debug.Log("AAAAAAAAAAAAA");
         if (other.CompareTag("Player"))
         {
             onButtonPress?.Invoke();
