@@ -9,6 +9,7 @@ public class MouseLook : MonoBehaviour
     public float smoothSpeed = 0.125f;
     public float collisionRadius = 0.5f;
     public LayerMask collisionLayers;
+    public float minDistanceFromPlayer = 2f; // Add a minimum distance to prevent camera clipping too much
 
     [Header("References")]
     public Transform playerBody;
@@ -35,12 +36,22 @@ public class MouseLook : MonoBehaviour
 
         Vector3 direction = verticalRotation * Vector3.back;
         Vector3 desiredPosition = playerBody.position + Vector3.up * verticalOffset + direction * distanceFromPlayer;
-        
+
+        // Perform a sphere cast to check for obstacles
         if (Physics.SphereCast(playerBody.position + Vector3.up * verticalOffset, collisionRadius, direction, out RaycastHit hit, distanceFromPlayer, collisionLayers))
         {
+            // Adjust the camera position to be slightly further away from the hit point
             desiredPosition = hit.point + direction * collisionRadius;
+
+            // Ensure the camera doesn't get too close to the object by limiting the distance
+            float distanceToHit = Vector3.Distance(playerBody.position, hit.point);
+            if (distanceToHit < minDistanceFromPlayer)
+            {
+                desiredPosition = playerBody.position + Vector3.up * verticalOffset + direction * minDistanceFromPlayer;
+            }
         }
 
+        // Smooth the camera movement
         transform.position = Vector3.SmoothDamp(transform.position, desiredPosition, ref currentVelocity, smoothSpeed);
         transform.rotation = verticalRotation;
     }
