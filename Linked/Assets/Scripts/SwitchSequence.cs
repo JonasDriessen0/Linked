@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using Unity.Mathematics;
 
 public class SwitchSequence : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class SwitchSequence : MonoBehaviour
     public HoverManager hoverManager;
     public MouseLook mouseLook;
     public Image fadeImage;
+    public Transform overseerGameObject;
     public float lookDuration = 0.5f;
     public float zoomDuration = 2f;
     public float zoomDistance = 3f;
@@ -90,6 +92,7 @@ public class SwitchSequence : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         hoverManager.enabled = true;
+        overseerGameObject.gameObject.SetActive(false); 
     }
 
     public void StartSwitchSequenceToSmall()
@@ -128,11 +131,12 @@ public class SwitchSequence : MonoBehaviour
         
         fadeImage.DOFade(0f, 1f).SetEase(Ease.InOutQuad);
         
-        bigGuyCamera.transform.position = bigGuyoriginalPosition;
-        bigGuyCamera.transform.rotation = bigGuyoriginalRotation;
+        bigGuyCamera.transform.localPosition = Vector3.zero;
+        bigGuyCamera.transform.localRotation = quaternion.identity;
         
         playerMovement.enabled = true;
         mouseLook.enabled = true;
         overseerController.enabled = false;
+        overseerGameObject.gameObject.SetActive(true);
     }
 }
