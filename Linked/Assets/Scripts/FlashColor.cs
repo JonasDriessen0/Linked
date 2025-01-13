@@ -3,9 +3,9 @@ using UnityEngine;
 public class FlashColor : MonoBehaviour
 {
     [Header("Flash Settings")]
-    public Color targetColor = Color.red;  // The color to flash to
-    public float flashDuration = 1f;       // Duration to take to change the color
-    public float flashInterval = 2f;       // Interval between flashes
+    public Color targetColor = Color.red;
+    public float flashDuration = 1f;
+    public float flashInterval = 2f;
 
     private Material objectMaterial;
     private Color originalColor;
@@ -13,11 +13,9 @@ public class FlashColor : MonoBehaviour
 
     void Start()
     {
-        // Get the object's material and save its original color
         objectMaterial = GetComponent<Renderer>().material;
         originalColor = objectMaterial.color;
-
-        // Start the flashing loop
+        
         StartCoroutine(FlashLoop());
     }
 
@@ -25,9 +23,7 @@ public class FlashColor : MonoBehaviour
     {
         while (true)
         {
-            // Flash the color
             yield return StartCoroutine(FlashToTargetColor());
-            // Wait for the interval before starting the next flash
             yield return new WaitForSeconds(flashInterval);
         }
     }
@@ -42,8 +38,7 @@ public class FlashColor : MonoBehaviour
             objectMaterial.color = Color.Lerp(originalColor, targetColor, lerpValue);
             yield return null;
         }
-
-        // After the flash duration, reset the color smoothly
+        
         float resetTime = 0.5f;
         float resetTimer = 0f;
 

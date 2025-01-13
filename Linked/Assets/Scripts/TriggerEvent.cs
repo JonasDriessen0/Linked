@@ -13,10 +13,13 @@ public class TriggerEvent : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        onTrigger.Invoke();
-        if (disableWhenFinish)
+        if (other.CompareTag("Player"))
         {
-            trigger.enabled = false;
+            onTrigger.Invoke();
+            if (disableWhenFinish)
+            {
+                trigger.enabled = false;
+            }
         }
     }
 }

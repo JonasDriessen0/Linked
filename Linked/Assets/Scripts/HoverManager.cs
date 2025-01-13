@@ -76,7 +76,7 @@ public class HoverManager : MonoBehaviour
         selectedObject.GetComponent<MovableObject>().StartMoving();
     }
 
-    void DeselectObject()
+    public void DeselectObject()
     {
         if (selectedObject != null)
         {

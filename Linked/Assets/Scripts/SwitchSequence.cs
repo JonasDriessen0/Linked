@@ -23,6 +23,7 @@ public class SwitchSequence : MonoBehaviour
     public float bigGuyFogDensity = 0.01f;
     public bool isBig;
 
+    private bool isSwitching = false;
     private Vector3 originalPosition;
     private Quaternion originalRotation;
     private Vector3 bigGuyoriginalPosition;
@@ -34,44 +35,49 @@ public class SwitchSequence : MonoBehaviour
     {
         originalPosition = mainCamera.transform.position;
         originalRotation = mainCamera.transform.rotation;
-        
+
         bigGuyoriginalPosition = bigGuyCamera.transform.position;
         bigGuyoriginalRotation = bigGuyCamera.transform.rotation;
         originalFOV = mainCamera.fieldOfView;
         originalFogDensity = RenderSettings.fogDensity;
-        fadeImage.color = new Color(1, 1, 1, 0);
     }
 
     public void SwitchPerspective()
     {
-        if (isBig)
+        if (!isSwitching)
         {
-            StartSwitchSequenceToSmall();
-        }
-        else
-        {
-            StartSwitchSequenceToBig();
+            if (isBig)
+            {
+                StartSwitchSequenceToSmall();
+            }
+            else
+            {
+                StartSwitchSequenceToBig();
+            }
         }
     }
 
     public void StartSwitchSequenceToBig()
     {
+        originalPosition = mainCamera.transform.position;
+        originalRotation = mainCamera.transform.rotation;
+        isSwitching = true;
         isBig = true;
         playerMovement.enabled = false;
         mouseLook.enabled = false;
-        
+
         mainCamera.transform.DOLookAt(bigGuyObject.position, lookDuration).SetEase(Ease.InOutQuad).OnComplete(() =>
         {
             DOVirtual.DelayedCall(0.2f, () =>
             {
                 Vector3 zoomPosition = bigGuyObject.position - (bigGuyObject.forward * zoomDistance);
-                
+
                 mainCamera.transform.DOMove(zoomPosition, zoomDuration).SetEase(Ease.InQuad);
-                
+
                 mainCamera.DOFieldOfView(originalFOV - fovIncreaseAmount, zoomDuration).SetEase(Ease.InQuad);
-                
+
                 fadeImage.DOFade(1f, zoomDuration).SetEase(Ease.InExpo).OnComplete(SwitchCameraToBig);
-                
+
                 DOTween.To(() => RenderSettings.fogDensity, x => RenderSettings.fogDensity = x, bigGuyFogDensity, fogTransitionDuration);
             });
         });
@@ -82,42 +88,46 @@ public class SwitchSequence : MonoBehaviour
         mainCamera.fieldOfView = originalFOV;
         mainCamera.enabled = false;
         bigGuyCamera.enabled = true;
-        
+
         fadeImage.DOFade(0f, 1f).SetEase(Ease.InOutQuad);
-        
+
         mainCamera.transform.position = originalPosition;
         mainCamera.transform.rotation = originalRotation;
-        
+
         overseerController.enabled = true;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         hoverManager.enabled = true;
-        overseerGameObject.gameObject.SetActive(false); 
+        overseerGameObject.gameObject.SetActive(false);
+
+        isSwitching = false;
     }
 
     public void StartSwitchSequenceToSmall()
     {
+        isSwitching = true;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         isBig = false;
         playerMovement.enabled = false;
         mouseLook.enabled = false;
-        if(hoverManager.lastHoveredObject != null)
+        if (hoverManager.lastHoveredObject != null)
             hoverManager.lastHoveredObject.RemoveHoverMaterial();
+        hoverManager.DeselectObject();
         hoverManager.enabled = false;
-        
+
         bigGuyCamera.transform.DOLookAt(smallGuyObject.position, lookDuration).SetEase(Ease.InOutQuad).OnComplete(() =>
         {
             DOVirtual.DelayedCall(0.2f, () =>
             {
                 Vector3 zoomPosition = smallGuyObject.position;
-                
+
                 bigGuyCamera.transform.DOMove(zoomPosition, zoomDuration).SetEase(Ease.InQuad);
-                
+
                 bigGuyCamera.DOFieldOfView(originalFOV, zoomDuration).SetEase(Ease.InQuad);
-                
+
                 fadeImage.DOFade(1f, zoomDuration).SetEase(Ease.InExpo).OnComplete(SwitchCameraToSmall);
-                
+
                 DOTween.To(() => RenderSettings.fogDensity, x => RenderSettings.fogDensity = x, originalFogDensity, fogTransitionDuration);
             });
         });
@@ -128,15 +138,17 @@ public class SwitchSequence : MonoBehaviour
         bigGuyCamera.fieldOfView = originalFOV;
         bigGuyCamera.enabled = false;
         mainCamera.enabled = true;
-        
+
         fadeImage.DOFade(0f, 1f).SetEase(Ease.InOutQuad);
-        
+
         bigGuyCamera.transform.localPosition = Vector3.zero;
         bigGuyCamera.transform.localRotation = quaternion.identity;
-        
+
         playerMovement.enabled = true;
         mouseLook.enabled = true;
         overseerController.enabled = false;
         overseerGameObject.gameObject.SetActive(true);
+
+        isSwitching = false;
     }
 }
