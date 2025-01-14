@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -15,6 +16,8 @@ public class PlayerMovement : MonoBehaviour
     public Transform cameraTransform;
     public Transform playerModel;
     public Animator animator;
+
+    [SerializeField] private UnityEvent OnJump;
 
     void Start()
     {
@@ -69,6 +72,7 @@ public class PlayerMovement : MonoBehaviour
 
             if (Input.GetButtonDown("Jump"))
             {
+                OnJump.Invoke();
                 moveDirection.y = jumpForce;
                 animator.SetBool("IsJumping", true);
             }

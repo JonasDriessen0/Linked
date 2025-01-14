@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using Unity.Mathematics;
+using UnityEngine.Events;
 
 public class SwitchSequence : MonoBehaviour
 {
@@ -22,6 +23,9 @@ public class SwitchSequence : MonoBehaviour
     public float fogTransitionDuration = 1f;
     public float bigGuyFogDensity = 0.01f;
     public bool isBig;
+
+    public UnityEvent OnSwitchToBig;
+    public UnityEvent OnSwitchToSmall;
 
     private bool isSwitching = false;
     private Vector3 originalPosition;
@@ -48,10 +52,12 @@ public class SwitchSequence : MonoBehaviour
         {
             if (isBig)
             {
+                OnSwitchToSmall.Invoke();
                 StartSwitchSequenceToSmall();
             }
             else
             {
+                OnSwitchToBig.Invoke();
                 StartSwitchSequenceToBig();
             }
         }

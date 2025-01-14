@@ -1844,6 +1844,12 @@ MonoBehaviour:
   fogTransitionDuration: 1
   bigGuyFogDensity: 0.013
   isBig: 0
+  OnSwitchToBig:
+    m_PersistentCalls:
+      m_Calls: []
+  OnSwitchToSmall:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!4 &240424971
 Transform:
   m_ObjectHideFlags: 0
@@ -4134,6 +4140,59 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 68b604394aa90604b897a3b52a41c7ad, type: 3}
+--- !u!1 &545733958
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 545733960}
+  - component: {fileID: 545733959}
+  m_Layer: 0
+  m_Name: Bottom collider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!65 &545733959
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 545733958}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 748.4, y: 10, z: 899.70465}
+  m_Center: {x: 0, y: 0, z: -75.65231}
+--- !u!4 &545733960
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 545733958}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -69.8, y: -154.9, z: -288}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!43 &548837879
 Mesh:
   m_ObjectHideFlags: 0
@@ -21502,3 +21561,4 @@ SceneRoots:
   - {fileID: 706429452}
   - {fileID: 1742289822}
   - {fileID: 1299358347}
+  - {fileID: 545733960}
