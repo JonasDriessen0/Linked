@@ -134,6 +134,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gridSize: 3
+  holdTime: 0.5
+  moveDelay: 0.06
 --- !u!114 &8633131440553277664
 MonoBehaviour:
   m_ObjectHideFlags: 0
